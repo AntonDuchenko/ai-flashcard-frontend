@@ -8,7 +8,10 @@ export const Header: React.FC = () => {
   const { mutate } = useCreateDeck();
 
   const handleCreateDeck = () => {
-    mutate();
+    mutate({
+      englishLvl: 'B1',
+      topic: 'General',
+    });
   };
 
   return (
@@ -23,7 +26,7 @@ export const Header: React.FC = () => {
           onClick={handleCreateDeck}
           className="flex items-center gap-2 px-4 py-2 rounded-xl text-white bg-blue-600 hover:bg-blue-700 transition duration-200 shadow"
         >
-          Створити деку
+          Создать деку
         </Button>
       </div>
     </header>

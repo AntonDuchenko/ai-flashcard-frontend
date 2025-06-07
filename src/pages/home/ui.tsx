@@ -1,25 +1,7 @@
+import type { Deck } from '@/entities/deck/model/types';
 import { DeckCard } from '@/entities/deck/ui/Deck';
 import { useDecks } from '@/shared/lib/hooks/useDecks';
 import { useNavigate } from 'react-router';
-
-export interface Deck {
-  id: string;
-  title: string;
-  userId: string;
-  user: string;
-  flashcards: Flashcard[];
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface Flashcard {
-  id: string;
-  question: string;
-  answer: string;
-  deck: Deck[];
-  createdAt: Date;
-  updatedAt: Date;
-}
 
 export const HomePage = () => {
   const navigate = useNavigate();

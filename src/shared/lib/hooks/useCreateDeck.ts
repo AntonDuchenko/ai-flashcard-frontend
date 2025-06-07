@@ -1,8 +1,8 @@
 import { instance } from '@/shared/api/instance';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-const createDeck = async () => {
-  const { data } = await instance.post('/deck');
+const createDeck = async (body: { englishLvl: string; topic: string }) => {
+  const { data } = await instance.post('/deck', body);
   return data;
 };
 

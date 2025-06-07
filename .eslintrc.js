@@ -65,4 +65,5 @@ module.exports = {
       version: 'detect',
     },
   },
+  ignores: ["dist", "node_modules", "build", "vite.config.ts"],
 };

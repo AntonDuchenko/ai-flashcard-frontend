@@ -1,13 +1,11 @@
-'use client';
-
 import { Flashcard } from '@/entities/flashcard/ui/FlashCard';
 import { useDecks } from '@/shared/lib/hooks/useDecks';
 import { useState } from 'react';
 import { useParams } from 'react-router';
-import type { Deck } from '../home/ui';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import clsx from 'clsx';
+import type { Deck } from '@/entities/deck/model/types';
 
 export const DeckPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -29,7 +27,7 @@ export const DeckPage = () => {
   const current = deck.flashcards[currentIndex];
 
   const handleSubmit = () => {
-    const correct = userAnswer.trim().toLowerCase() === current.answer.trim().toLowerCase();
+    const correct = userAnswer.trim().toLowerCase() === current.translation.trim().toLowerCase();
     setIsCorrect(correct);
     setFlipped(true);
     setHasAnswered(true);
@@ -75,8 +73,8 @@ export const DeckPage = () => {
         <>
           <div className="flex justify-center">
             <Flashcard
-              word={current.question}
-              translation={current.answer}
+              word={current.word}
+              translation={current.translation}
               isFlipped={flipped}
               onFlip={hasAnswered ? () => setFlipped((f) => !f) : undefined}
             />
