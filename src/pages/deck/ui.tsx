@@ -1,11 +1,12 @@
 import { Flashcard } from '@/entities/flashcard/ui/FlashCard';
 import { useDecks } from '@/shared/lib/hooks/useDecks';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useParams } from 'react-router';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import clsx from 'clsx';
 import type { Deck } from '@/entities/deck/model/types';
+import { useSendAnswers } from '@/shared/lib/hooks/useSendAnswers';
 
 export const DeckPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -15,7 +16,9 @@ export const DeckPage = () => {
   const [isCorrect, setIsCorrect] = useState<null | boolean>(null);
   const [isFinished, setIsFinished] = useState(false);
   const [hasAnswered, setHasAnswered] = useState(false);
+  const answersRef = useRef<{ englishWord: string; answersStatus: boolean }[]>([]);
 
+  const { mutateAsync: sendAnswers } = useSendAnswers();
   const { data: decks, isLoading } = useDecks();
   const deck = decks?.find((deck: Deck) => deck.id === id);
 
@@ -31,6 +34,11 @@ export const DeckPage = () => {
     setIsCorrect(correct);
     setFlipped(true);
     setHasAnswered(true);
+
+    answersRef.current = [
+      ...answersRef.current,
+      { englishWord: current.word, answersStatus: correct },
+    ];
   };
 
   const handleNext = () => {
@@ -42,6 +50,7 @@ export const DeckPage = () => {
 
       if (nextIndex >= deck.flashcards.length) {
         setIsFinished(true);
+        sendAnswers(answersRef.current);
       } else {
         setCurrentIndex(nextIndex);
         setUserAnswer('');
