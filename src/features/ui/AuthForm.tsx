@@ -23,7 +23,7 @@ export const AuthForm = () => {
   const { onSubmit } = useAuthSubmit(form, {
     apiPath: isSignUp ? '/auth/register' : '/auth/login',
     onSuccess: () => {
-      window.location.href = '/complete-registration';
+      window.location.href = isSignUp ? '/complete-registration' : '/';
     },
   });
 
