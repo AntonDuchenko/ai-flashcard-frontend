@@ -59,14 +59,6 @@ export const DeckPage = () => {
     }, 500);
   };
 
-  const handleRestart = () => {
-    setCurrentIndex(0);
-    setUserAnswer('');
-    setIsCorrect(null);
-    setIsFinished(false);
-    setFlipped(false);
-  };
-
   return (
     <section className="max-w-4xl mx-auto px-4 py-10">
       <h1 className="text-3xl font-bold text-blue-800 mb-6 text-center">{deck.title}</h1>
@@ -76,7 +68,6 @@ export const DeckPage = () => {
           <p className="text-xl text-green-700 font-medium mb-4">
             🎉 Вітаємо! Ви завершили колоду.
           </p>
-          <Button onClick={handleRestart}>Почати знову</Button>
         </div>
       ) : (
         <>

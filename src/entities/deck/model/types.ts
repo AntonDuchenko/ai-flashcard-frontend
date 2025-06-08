@@ -4,7 +4,6 @@ export interface Deck {
   userId: string;
   user: string;
   englishLvl: string;
-  topic: string;
   flashcards: CustomFlashcard[];
   createdAt: Date;
   updatedAt: Date;

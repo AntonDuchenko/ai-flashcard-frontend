@@ -2,6 +2,7 @@ import { MainLayout } from '@/shared/layouts';
 import { AuthPage } from './auth/ui';
 import { HomePage } from './home/ui';
 import { DeckPage } from './deck/ui';
+import { CompleteRegistrationPage } from './completeRegistartion/ui';
 
 export const appRoutes = [
   {
@@ -19,6 +20,10 @@ export const appRoutes = [
         <DeckPage />
       </MainLayout>
     ),
+  },
+  {
+    path: 'complete-registration',
+    element: <CompleteRegistrationPage />,
   },
   {
     path: 'sign-in',
