@@ -17,9 +17,7 @@ export const DeckPage = () => {
   const [isCorrect, setIsCorrect] = useState<null | boolean>(null);
   const [isFinished, setIsFinished] = useState(false);
   const [hasAnswered, setHasAnswered] = useState(false);
-  const answersRef = useRef<{ englishWord: string; answersStatus: boolean; answerTime: number }[]>(
-    [],
-  );
+  const answersRef = useRef<{ wordId: string; correct: boolean; answerTime: number }[]>([]);
 
   const { mutateAsync: sendAnswers } = useSendAnswers();
   const { data: decks, isLoading } = useDecks();
@@ -41,8 +39,8 @@ export const DeckPage = () => {
     answersRef.current = [
       ...answersRef.current,
       {
-        englishWord: current.word,
-        answersStatus: correct,
+        wordId: current.id,
+        correct,
         answerTime: Number(((Date.now() - flippedTime) / 1000).toFixed(1)),
       },
     ];
