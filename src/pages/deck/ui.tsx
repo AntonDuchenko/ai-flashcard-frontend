@@ -12,11 +12,14 @@ export const DeckPage = () => {
   const { id } = useParams<{ id: string }>();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
+  const [flippedTime, setFlippedTime] = useState(Date.now());
   const [userAnswer, setUserAnswer] = useState('');
   const [isCorrect, setIsCorrect] = useState<null | boolean>(null);
   const [isFinished, setIsFinished] = useState(false);
   const [hasAnswered, setHasAnswered] = useState(false);
-  const answersRef = useRef<{ englishWord: string; answersStatus: boolean }[]>([]);
+  const answersRef = useRef<{ englishWord: string; answersStatus: boolean; answerTime: number }[]>(
+    [],
+  );
 
   const { mutateAsync: sendAnswers } = useSendAnswers();
   const { data: decks, isLoading } = useDecks();
@@ -37,7 +40,11 @@ export const DeckPage = () => {
 
     answersRef.current = [
       ...answersRef.current,
-      { englishWord: current.word, answersStatus: correct },
+      {
+        englishWord: current.word,
+        answersStatus: correct,
+        answerTime: Number(((Date.now() - flippedTime) / 1000).toFixed(1)),
+      },
     ];
   };
 
@@ -55,6 +62,7 @@ export const DeckPage = () => {
         setCurrentIndex(nextIndex);
         setUserAnswer('');
         setIsCorrect(null);
+        setFlippedTime(Date.now());
       }
     }, 500);
   };
