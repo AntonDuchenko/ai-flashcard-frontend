@@ -20,7 +20,7 @@ export const AuthForm = () => {
   const pathname = useLocation().pathname;
   const isSignUp = pathname === '/sign-up';
 
-  const { onSubmit } = useAuthSubmit(form, {
+  const { onSubmit, isLoading } = useAuthSubmit(form, {
     apiPath: isSignUp ? '/auth/register' : '/auth/login',
     onSuccess: () => {
       window.location.href = isSignUp ? '/complete-registration' : '/';
@@ -44,7 +44,7 @@ export const AuthForm = () => {
             </span>
           </div>
           <AuthEmailPasswordFields form={form} isSignUp={isSignUp} />
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full" isLoading={isLoading}>
             {isSignUp ? 'Sign up' : 'Sign in'}
           </Button>
           <AuthToggleLink isSignUp={isSignUp} />

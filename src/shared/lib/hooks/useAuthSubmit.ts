@@ -26,5 +26,5 @@ export const useAuthSubmit = (
     }
   };
 
-  return { onSubmit };
+  return { onSubmit, isLoading: form.formState.isSubmitting };
 };

@@ -4,9 +4,10 @@ import { useRef, useState } from 'react';
 import { useParams } from 'react-router';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
-import clsx from 'clsx';
 import type { Deck } from '@/entities/deck/model/types';
 import { useSendAnswers } from '@/shared/lib/hooks/useSendAnswers';
+import { cn } from '@/shared/lib/utils/utils';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export const DeckPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -19,7 +20,7 @@ export const DeckPage = () => {
   const [hasAnswered, setHasAnswered] = useState(false);
   const answersRef = useRef<{ wordId: string; correct: boolean; answerTime: number }[]>([]);
 
-  const { mutateAsync: sendAnswers } = useSendAnswers();
+  const { mutateAsync: sendAnswers, isPending } = useSendAnswers();
   const { data: decks, isLoading } = useDecks();
   const deck = decks?.find((deck: Deck) => deck.id === id);
 
@@ -30,8 +31,10 @@ export const DeckPage = () => {
 
   const current = deck.flashcards[currentIndex];
 
-  const handleSubmit = () => {
-    const correct = userAnswer.trim().toLowerCase() === current.translation.trim().toLowerCase();
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const correct = userAnswer.trim().toLowerCase() === current.word.trim().toLowerCase();
     setIsCorrect(correct);
     setFlipped(true);
     setHasAnswered(true);
@@ -77,44 +80,75 @@ export const DeckPage = () => {
         </div>
       ) : (
         <>
-          <div className="flex justify-center">
-            <Flashcard
-              word={current.word}
-              translation={current.translation}
-              isFlipped={flipped}
-              onFlip={hasAnswered ? () => setFlipped((f) => !f) : undefined}
-            />
+          <div className="flex justify-center h-[210px] relative">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={current.id}
+                initial={{ opacity: 0, x: 100 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -100 }}
+                transition={{ duration: 0.3 }}
+                className="w-[320px]"
+              >
+                <Flashcard
+                  word={current.translation}
+                  translation={current.word}
+                  isFlipped={flipped}
+                  onFlip={hasAnswered ? () => setFlipped((f) => !f) : undefined}
+                />
+              </motion.div>
+            </AnimatePresence>
           </div>
 
-          <div className="mt-6 flex flex-col sm:flex-row justify-center gap-4 items-center">
+          <form
+            className="mt-6 flex flex-col sm:flex-row justify-center gap-4 items-center"
+            onSubmit={handleSubmit}
+          >
             <Input
+              key={current.id}
               value={userAnswer}
+              autoFocus
+              disabled={hasAnswered}
               onChange={(e) => setUserAnswer(e.target.value)}
-              placeholder="Введи переклад..."
-              className={clsx(
+              placeholder="Введи перевод..."
+              className={cn(
                 'px-4 py-2 rounded-xl border transition max-w-[400px]',
                 isCorrect === null && 'border-gray-300',
-                isCorrect === true && 'border-green-500 bg-green-50',
-                isCorrect === false && 'border-red-500 bg-red-50',
+                isCorrect === true && 'bg-green-50 border-green-500',
+                isCorrect === false && 'bg-red-50 border-red-500',
               )}
             />
 
             <Button
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl transition"
-              onClick={handleSubmit}
-              disabled={!(isCorrect === null) || !userAnswer}
+              type="submit"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl"
+              disabled={!(isCorrect === null) || !userAnswer || isPending}
             >
               Перевірити
             </Button>
 
             <Button
-              className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-2 rounded-xl transition"
-              onClick={handleNext}
-              disabled={!userAnswer && isCorrect === null}
+              type="button"
+              className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-xl"
+              onClick={() => {
+                setHasAnswered(true);
+                setIsCorrect(false);
+              }}
+              disabled={!!hasAnswered || isPending}
             >
-              Наступна
+              Не знаю
             </Button>
-          </div>
+
+            <Button
+              type="button"
+              className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-2 rounded-xl"
+              onClick={handleNext}
+              isLoading={isPending}
+              disabled={!hasAnswered || isPending}
+            >
+              Следующая
+            </Button>
+          </form>
         </>
       )}
     </section>

@@ -1,19 +1,13 @@
+import type { Flashcard } from '@/entities/flashcard/model/types';
+
 export interface Deck {
   id: string;
   title: string;
   userId: string;
   user: string;
+  type: 'DAILY' | 'REPEATING';
   englishLvl: string;
-  flashcards: CustomFlashcard[];
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-interface CustomFlashcard {
-  id: string;
-  word: string;
-  translation: string;
-  example: string;
+  flashcards: Flashcard[];
   createdAt: Date;
   updatedAt: Date;
 }

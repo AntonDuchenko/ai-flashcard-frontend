@@ -19,7 +19,7 @@ export function ProfilePreferences() {
   const navigate = useNavigate();
 
   const { data: interests } = useInterests();
-  const { mutate } = useCompleteProfile();
+  const { mutate, isPending } = useCompleteProfile();
 
   const toggleInterest = (interest: Interest) => {
     setSelectedInterests((prev) =>
@@ -48,7 +48,7 @@ export function ProfilePreferences() {
           onSuccess: () => {
             setEnglishLevel('');
             setSelectedInterests([]);
-            navigate('/');
+            navigate('/', { replace: true });
           },
         },
       );
@@ -107,7 +107,7 @@ export function ProfilePreferences() {
         {errors.interests && <p className="text-sm text-red-500 mt-1">{errors.interests}</p>}
       </div>
 
-      <Button className="w-full" onClick={handleSubmit}>
+      <Button className="w-full" onClick={handleSubmit} isLoading={isPending}>
         Submit
       </Button>
     </div>

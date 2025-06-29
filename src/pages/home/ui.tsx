@@ -1,11 +1,13 @@
 import type { Deck } from '@/entities/deck/model/types';
 import { DeckCard } from '@/entities/deck/ui/Deck';
 import { useDecks } from '@/shared/lib/hooks/useDecks';
+import { useProfile } from '@/shared/lib/hooks/useProfile';
 import { useNavigate } from 'react-router';
 
 export const HomePage = () => {
   const navigate = useNavigate();
   const { data: decks, isLoading } = useDecks();
+  const { data: profile } = useProfile();
 
   if (isLoading) {
     return (
@@ -33,6 +35,7 @@ export const HomePage = () => {
             key={deck.id}
             title={deck.title}
             flashcardCount={deck.flashcards.length}
+            isCompleted={deck.type === 'DAILY' ? profile?.dailyComplete : false}
             createdAt={deck.createdAt}
             author={deck.user}
             onClick={() => {

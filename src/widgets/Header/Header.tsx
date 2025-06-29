@@ -1,13 +1,15 @@
 import AvatarFallbackIcon from '@/shared/icons/AvatarFallback';
 import { useLogout } from '@/shared/lib/hooks/useLoguot';
+import { useProfile } from '@/shared/lib/hooks/useProfile';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
 import { Button } from '@/shared/ui/button';
-import { BookOpenCheck } from 'lucide-react';
+import { BookOpenCheck, Flame } from 'lucide-react';
 import React from 'react';
 import { Link } from 'react-router';
 
 export const Header: React.FC = () => {
   const { mutate } = useLogout();
+  const { data: profile } = useProfile();
 
   const handleLogout = () => mutate();
 
@@ -19,7 +21,11 @@ export const Header: React.FC = () => {
           <h1 className="text-2xl font-bold text-blue-800">FlashWords</h1>
         </Link>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
+          <div className="text-orange-500 flex gap-1 items-center bg-orange-200 rounded-2xl px-3 py-1 text-xl font-medium">
+            <Flame />
+            <div >{profile?.daysStreak}</div>
+          </div>
           <Avatar>
             <AvatarImage src="https://github.com/shadcn.png" />
             <AvatarFallback>
