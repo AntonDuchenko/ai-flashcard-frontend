@@ -1,4 +1,3 @@
-import type { Deck } from '@/entities/deck/model/types';
 import { DeckCard } from '@/entities/deck/ui/Deck';
 import { useDecks } from '@/shared/lib/hooks/useDecks';
 import { useProfile } from '@/shared/lib/hooks/useProfile';
@@ -25,24 +24,49 @@ export const HomePage = () => {
     );
   }
 
-  return (
-    <section className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-blue-800 mb-6">Мои колоды</h1>
+  const firstDeck = decks.find((deck) => deck.type === 'DAILY');
+  const secondDeck = decks.find((deck) => deck.type === 'REPEATING');
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {decks.map((deck: Deck) => (
+  return (
+    <section className="flex flex-col flex-grow px-4 py-8 max-w-screen-lg mx-auto">
+      <div className="grid grid-cols-1 grid-rows-4 md:grid-cols-2 md:grid-rows-2 gap-6 flex-grow min-h-0">
+        {firstDeck && (
           <DeckCard
-            key={deck.id}
-            title={deck.title}
-            flashcardCount={deck.flashcards.length}
-            isCompleted={deck.type === 'DAILY' ? profile?.dailyComplete : false}
-            createdAt={deck.createdAt}
-            author={deck.user}
-            onClick={() => {
-              navigate(`/deck/${deck.id}`);
-            }}
+            key={firstDeck.id}
+            title={firstDeck.title}
+            flashcardCount={firstDeck.flashcards.length}
+            isCompleted={firstDeck.type === 'DAILY' ? profile?.dailyComplete : false}
+            createdAt={firstDeck.createdAt}
+            author={firstDeck.user}
+            onClick={() => navigate(`/deck/${firstDeck.id}`)}
+            className="w-full h-full"
           />
-        ))}
+        )}
+
+        <div className="w-full h-full rounded-xl shadow bg-gray-100 flex items-center justify-center">
+          Статистика 1
+        </div>
+
+        {secondDeck ? (
+          <DeckCard
+            key={secondDeck.id}
+            title={secondDeck.title}
+            flashcardCount={secondDeck.flashcards.length}
+            isCompleted={secondDeck.type === 'DAILY' ? profile?.dailyComplete : false}
+            createdAt={secondDeck.createdAt}
+            author={secondDeck.user}
+            onClick={() => navigate(`/deck/${secondDeck.id}`)}
+            className="w-full h-full"
+          />
+        ) : (
+          <div className="w-full h-full rounded-xl shadow bg-gray-100 flex items-center justify-center text-gray-400 text-sm">
+            Вторая дека ещё не создана
+          </div>
+        )}
+
+        <div className="w-full h-full rounded-xl shadow bg-gray-100 flex items-center justify-center">
+          Статистика 2
+        </div>
       </div>
     </section>
   );

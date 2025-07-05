@@ -18,13 +18,13 @@ export const Header: React.FC = () => {
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3">
           <BookOpenCheck className="text-blue-600" size={28} />
-          <h1 className="text-2xl font-bold text-blue-800">FlashWords</h1>
+          <h1 className="text-2xl font-bold text-blue-800 hidden sm:block">FlashWords</h1>
         </Link>
 
         <div className="flex items-center gap-4">
           <div className="text-orange-500 flex gap-1 items-center bg-orange-200 rounded-2xl px-3 py-1 text-xl font-medium">
             <Flame />
-            <div >{profile?.daysStreak}</div>
+            <div>{profile?.daysStreak}</div>
           </div>
           <Avatar>
             <AvatarImage src="https://github.com/shadcn.png" />

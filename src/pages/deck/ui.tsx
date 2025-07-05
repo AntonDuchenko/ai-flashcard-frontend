@@ -1,6 +1,6 @@
 import { Flashcard } from '@/entities/flashcard/ui/FlashCard';
 import { useDecks } from '@/shared/lib/hooks/useDecks';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
@@ -8,6 +8,7 @@ import type { Deck } from '@/entities/deck/model/types';
 import { useSendAnswers } from '@/shared/lib/hooks/useSendAnswers';
 import { cn } from '@/shared/lib/utils/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useSendReapitingAnswers } from '@/shared/lib/hooks/useSendReapitingAnswers';
 
 export const DeckPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -21,13 +22,28 @@ export const DeckPage = () => {
   const answersRef = useRef<{ wordId: string; correct: boolean; answerTime: number }[]>([]);
 
   const { mutateAsync: sendAnswers, isPending } = useSendAnswers();
+  const { mutateAsync: sendReapitingAnswers, isPending: isPendingReapiting } =
+    useSendReapitingAnswers();
   const { data: decks, isLoading } = useDecks();
   const deck = decks?.find((deck: Deck) => deck.id === id);
 
-  if (!id) return <div className="text-center mt-10">Deck not found</div>;
-  if (isLoading || !deck) return <div className="text-center mt-10">Завантаження...</div>;
-  if (!deck.flashcards.length)
-    return <div className="text-center mt-10">У цій колоді немає карток</div>;
+  useEffect(() => {
+    const handleKeyNextAction = (e: KeyboardEvent) => {
+      if (e.key === 'Enter' && hasAnswered) {
+        handleNext();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyNextAction);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyNextAction);
+    };
+  }, [hasAnswered]);
+
+  if (!id) return <div className="text-center mt-10">Колода не найдена</div>;
+  if (isLoading || !deck) return <div className="text-center mt-10">Загрузка колоды...</div>;
+  if (!deck.flashcards.length) return <div className="text-center mt-10">Колода пуста</div>;
 
   const current = deck.flashcards[currentIndex];
 
@@ -49,16 +65,22 @@ export const DeckPage = () => {
     ];
   };
 
-  const handleNext = () => {
+  function handleNext() {
     setFlipped(false);
     setHasAnswered(false);
 
     setTimeout(() => {
+      if (!deck) return;
+
       const nextIndex = currentIndex + 1;
 
       if (nextIndex >= deck.flashcards.length) {
         setIsFinished(true);
-        sendAnswers(answersRef.current);
+        if (deck.type === 'REPEATING') {
+          sendReapitingAnswers(answersRef.current);
+        } else {
+          sendAnswers(answersRef.current);
+        }
       } else {
         setCurrentIndex(nextIndex);
         setUserAnswer('');
@@ -66,7 +88,7 @@ export const DeckPage = () => {
         setFlippedTime(Date.now());
       }
     }, 500);
-  };
+  }
 
   return (
     <section className="max-w-4xl mx-auto px-4 py-10">
@@ -75,7 +97,7 @@ export const DeckPage = () => {
       {isFinished ? (
         <div className="text-center mt-10">
           <p className="text-xl text-green-700 font-medium mb-4">
-            🎉 Вітаємо! Ви завершили колоду.
+            🎉 Поздравляем! Вы завершили колоду.
           </p>
         </div>
       ) : (
@@ -101,7 +123,7 @@ export const DeckPage = () => {
           </div>
 
           <form
-            className="mt-6 flex flex-col sm:flex-row justify-center gap-4 items-center"
+            className="mt-6 flex flex-col justify-center gap-4 items-center"
             onSubmit={handleSubmit}
           >
             <Input
@@ -119,35 +141,37 @@ export const DeckPage = () => {
               )}
             />
 
-            <Button
-              type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl"
-              disabled={!(isCorrect === null) || !userAnswer || isPending}
-            >
-              Перевірити
-            </Button>
+            <div className="flex flex-col gap-4 w-full max-w-[200px]">
+              <Button
+                type="submit"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl"
+                disabled={!(isCorrect === null) || !userAnswer || isPending || isPendingReapiting}
+              >
+                Проверить
+              </Button>
 
-            <Button
-              type="button"
-              className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-xl"
-              onClick={() => {
-                setHasAnswered(true);
-                setIsCorrect(false);
-              }}
-              disabled={!!hasAnswered || isPending}
-            >
-              Не знаю
-            </Button>
+              <Button
+                type="button"
+                className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-xl"
+                onClick={() => {
+                  setHasAnswered(true);
+                  setIsCorrect(false);
+                }}
+                disabled={!!hasAnswered || isPending}
+              >
+                Не знаю
+              </Button>
 
-            <Button
-              type="button"
-              className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-2 rounded-xl"
-              onClick={handleNext}
-              isLoading={isPending}
-              disabled={!hasAnswered || isPending}
-            >
-              Следующая
-            </Button>
+              <Button
+                type="button"
+                className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-2 rounded-xl"
+                onClick={handleNext}
+                isLoading={isPending}
+                disabled={!hasAnswered || isPending}
+              >
+                Следующая
+              </Button>
+            </div>
           </form>
         </>
       )}
