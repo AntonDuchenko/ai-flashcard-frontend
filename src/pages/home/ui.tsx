@@ -35,7 +35,7 @@ export const HomePage = () => {
             key={firstDeck.id}
             title={firstDeck.title}
             flashcardCount={firstDeck.flashcards.length}
-            isCompleted={firstDeck.type === 'DAILY' ? profile?.dailyComplete : false}
+            isCompleted={profile?.isDailyComplete}
             createdAt={firstDeck.createdAt}
             author={firstDeck.user}
             onClick={() => navigate(`/deck/${firstDeck.id}`)}
@@ -52,7 +52,6 @@ export const HomePage = () => {
             key={secondDeck.id}
             title={secondDeck.title}
             flashcardCount={secondDeck.flashcards.length}
-            isCompleted={secondDeck.type === 'DAILY' ? profile?.dailyComplete : false}
             createdAt={secondDeck.createdAt}
             author={secondDeck.user}
             onClick={() => navigate(`/deck/${secondDeck.id}`)}
