@@ -156,6 +156,7 @@ export const DeckPage = () => {
                 onClick={() => {
                   setHasAnswered(true);
                   setIsCorrect(false);
+                  setFlipped(true);
                 }}
                 disabled={!!hasAnswered || isPending}
               >

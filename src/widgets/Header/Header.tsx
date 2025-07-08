@@ -6,6 +6,7 @@ import { Button } from '@/shared/ui/button';
 import { BookOpenCheck, Flame } from 'lucide-react';
 import React from 'react';
 import { Link } from 'react-router';
+import { motion } from 'framer-motion';
 
 export const Header: React.FC = () => {
   const { mutate } = useLogout();
@@ -14,7 +15,12 @@ export const Header: React.FC = () => {
   const handleLogout = () => mutate();
 
   return (
-    <header className="w-full px-6 py-4 bg-gradient-to-b from-blue-50 to-white/80 backdrop-blur-md shadow-sm border-b border-blue-100">
+    <motion.header
+      initial={{ scale: 0.98, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ duration: 0.5, ease: 'easeOut' }}
+      className="w-full px-6 py-4 bg-gradient-to-b from-blue-50 to-white/80 backdrop-blur-md shadow-sm border-b border-blue-100"
+    >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3">
           <BookOpenCheck className="text-blue-600" size={28} />
@@ -40,6 +46,6 @@ export const Header: React.FC = () => {
           </Button>
         </div>
       </div>
-    </header>
+    </motion.header>
   );
 };

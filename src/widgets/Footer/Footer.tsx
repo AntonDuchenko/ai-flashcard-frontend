@@ -1,9 +1,15 @@
 import { Github, Mail } from 'lucide-react';
 import React from 'react';
+import { motion } from 'framer-motion';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="w-full bg-white border-t border-gray-200 py-6 px-4 mt-auto">
+    <motion.footer
+      initial={{ scale: 0.98, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ duration: 0.5, ease: 'easeOut' }}
+      className="w-full bg-white border-t border-gray-200 py-6 px-4 mt-auto"
+    >
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         <span className="text-sm text-gray-500">
           © {new Date().getFullYear()} FlashWords — Учи английский легко.
@@ -28,6 +34,6 @@ export const Footer: React.FC = () => {
           </a>
         </div>
       </div>
-    </footer>
+    </motion.footer>
   );
 };
