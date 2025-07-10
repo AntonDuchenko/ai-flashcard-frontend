@@ -8,5 +8,13 @@ export interface Profile {
   englishLvl: string;
   id: string;
   learnedWords: Flashcard[];
-  dailyDeckCompletions: Date[];
+  dailyDeckCompletions: DailyDeckCompletion[];
+}
+
+interface DailyDeckCompletion {
+  id: string;
+  userId: string;
+  date: string;
+  createdAt: string;
+  updatedAt: string;
 }

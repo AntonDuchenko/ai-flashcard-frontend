@@ -10,11 +10,8 @@ export const HomePage = () => {
   const { data: decks, isLoading } = useDecks();
   const { data: profile } = useProfile();
 
-  const dailyDeckCompletions = [
-    '2025-07-07T00:00:00.000Z',
-    '2025-07-08T00:00:00.000Z',
-    '2025-07-09T00:00:00.000Z',
-  ];
+  const dailyDeckCompletions =
+    profile?.dailyDeckCompletions.map((completion) => completion.date) || [];
 
   if (isLoading) {
     return (
