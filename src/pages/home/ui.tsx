@@ -10,8 +10,7 @@ export const HomePage = () => {
   const { data: decks, isLoading } = useDecks();
   const { data: profile } = useProfile();
 
-  const dailyDeckCompletions =
-    profile?.dailyDeckCompletions.map((completion) => completion.date) || [];
+  const dailyDeckCompletions = profile?.dailyDeckCompletions?.map((completion) => completion.date);
 
   if (isLoading) {
     return (
@@ -63,8 +62,8 @@ export const HomePage = () => {
           <Calendar
             mode="range"
             selected={{
-              from: new Date(dailyDeckCompletions[0]),
-              to: new Date(dailyDeckCompletions[dailyDeckCompletions.length - 1]),
+              from: new Date(dailyDeckCompletions?.[0] || ''),
+              to: new Date(dailyDeckCompletions?.[dailyDeckCompletions.length - 1] || ''),
             }}
             disabled
             className="rounded-md"
