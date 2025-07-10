@@ -67,8 +67,24 @@ export const HomePage = () => {
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.4, delay: 0.1 }}
-          className="w-full h-full rounded-xl shadow bg-gray-100 flex justify-center min-h-[365px] p-4"
+          className="w-full h-full rounded-xl shadow bg-gray-100 flex items-start min-h-[365px] p-2 gap-4"
         >
+          <div className="w-full max-w-sm flex flex-col gap-4 bg-white rounded-lg shadow p-4 text-center">
+            <div className="flex flex-col justify-between items-center text-sm text-gray-600 text-start">
+              <div>
+                🔥 Текущий стрик:{' '}
+                <span className="font-bold text-orange-600">{profile?.daysStreak} дней</span>
+              </div>
+              <div>
+                🏆 Самый большой стрик: <span className="font-bold text-green-600">12 дней</span>
+              </div>
+            </div>
+            <p className="text-xs text-gray-500">
+              Продолжай в том же духе! Каждый день имеет значение — оставайся последовательным, и
+              результат не заставит себя ждать.
+            </p>
+          </div>
+
           <Calendar
             mode="range"
             selected={{
