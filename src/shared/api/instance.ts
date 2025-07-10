@@ -8,6 +8,8 @@ export const instance = axios.create({
 instance.interceptors.response.use(
   (response) => response,
   (error) => {
+    console.log(error);
+    
     if (error.response?.status === 401) {
       window.location.href = '/sign-in';
     }

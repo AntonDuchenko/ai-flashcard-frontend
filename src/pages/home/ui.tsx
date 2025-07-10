@@ -3,11 +3,18 @@ import { useDecks } from '@/shared/lib/hooks/useDecks';
 import { useProfile } from '@/shared/lib/hooks/useProfile';
 import { useNavigate } from 'react-router';
 import { motion } from 'framer-motion';
+import { Calendar } from '@/shared/ui/calendar';
 
 export const HomePage = () => {
   const navigate = useNavigate();
   const { data: decks, isLoading } = useDecks();
   const { data: profile } = useProfile();
+
+  const dailyDeckCompletions = [
+    '2025-07-07T00:00:00.000Z',
+    '2025-07-08T00:00:00.000Z',
+    '2025-07-09T00:00:00.000Z',
+  ];
 
   if (isLoading) {
     return (
@@ -54,10 +61,17 @@ export const HomePage = () => {
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.4, delay: 0.1 }}
+          className="w-full h-full rounded-xl shadow bg-gray-100 flex justify-center min-h-[365px] p-4"
         >
-          <div className="w-full h-full rounded-xl shadow bg-gray-100 flex items-center justify-center">
-            Статистика 1
-          </div>
+          <Calendar
+            mode="range"
+            selected={{
+              from: new Date(dailyDeckCompletions[0]),
+              to: new Date(dailyDeckCompletions[dailyDeckCompletions.length - 1]),
+            }}
+            disabled
+            className="rounded-md"
+          />
         </motion.div>
 
         <motion.div
@@ -77,7 +91,7 @@ export const HomePage = () => {
             />
           ) : (
             <div className="w-full h-full rounded-xl shadow bg-gray-100 flex items-center justify-center text-gray-400 text-sm">
-              Вторая дека ещё не создана
+              Колода для повторения еще не создана
             </div>
           )}
         </motion.div>
@@ -86,10 +100,9 @@ export const HomePage = () => {
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.4, delay: 0.2 }}
+          className="w-full h-full rounded-xl shadow bg-gray-100 flex items-center justify-center"
         >
-          <div className="w-full h-full rounded-xl shadow bg-gray-100 flex items-center justify-center">
-            Статистика 2
-          </div>
+          Статистика 2
         </motion.div>
       </div>
     </section>

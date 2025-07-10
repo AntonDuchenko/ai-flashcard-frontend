@@ -8,4 +8,5 @@ export interface Profile {
   englishLvl: string;
   id: string;
   learnedWords: Flashcard[];
+  dailyDeckCompletions: Date[];
 }
