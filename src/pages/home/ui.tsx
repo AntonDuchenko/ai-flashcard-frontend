@@ -4,13 +4,23 @@ import { useProfile } from '@/shared/lib/hooks/useProfile';
 import { useNavigate } from 'react-router';
 import { motion } from 'framer-motion';
 import { Calendar } from '@/shared/ui/calendar';
+import { useEffect, useState } from 'react';
 
 export const HomePage = () => {
   const navigate = useNavigate();
   const { data: decks, isLoading } = useDecks();
   const { data: profile } = useProfile();
+  const [fromDate, setFromDate] = useState<Date | null>(null);
+  const [toDate, setToDate] = useState<Date | null>(null);
 
-  const dailyDeckCompletions = profile?.dailyDeckCompletions?.map((completion) => completion.date);
+  useEffect(() => {
+    if (profile?.dailyDeckCompletions?.length) {
+      const firstCompletion = profile.dailyDeckCompletions[0];
+      const lastCompletion = profile.dailyDeckCompletions[profile.dailyDeckCompletions.length - 1];
+      setFromDate(new Date(firstCompletion.date));
+      setToDate(new Date(lastCompletion.date));
+    }
+  }, [profile]);
 
   if (isLoading) {
     return (
@@ -62,8 +72,8 @@ export const HomePage = () => {
           <Calendar
             mode="range"
             selected={{
-              from: new Date(dailyDeckCompletions?.[0] || ''),
-              to: new Date(dailyDeckCompletions?.[dailyDeckCompletions.length - 1] || ''),
+              from: fromDate || undefined,
+              to: toDate || undefined,
             }}
             disabled
             className="rounded-md"
