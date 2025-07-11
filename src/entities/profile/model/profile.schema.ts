@@ -7,6 +7,7 @@ export interface Profile {
   email: string;
   englishLvl: string;
   id: string;
+  bestStreak: number;
   learnedWords: Flashcard[];
   dailyDeckCompletions: DailyDeckCompletion[];
 }

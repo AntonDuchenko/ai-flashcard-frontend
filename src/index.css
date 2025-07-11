@@ -119,6 +119,63 @@
   }
 }
 
+@layer utilities {
+  .loader18 {
+    --w: 10ch;
+    width: var(--w);
+    overflow: hidden;
+    white-space: nowrap;
+    color: #0000;
+    font-weight: bold;
+    font-family: monospace;
+    font-size: 30px;
+    animation: l18 3s infinite;
+  }
+
+  @keyframes l18 {
+    0% {
+      text-shadow:
+        calc(9 * var(--w)) 0 #2563eb,
+        calc(-1 * var(--w)) 0 #2563eb,
+        calc(-11 * var(--w)) 0 #2563eb,
+        calc(-21 * var(--w)) 0 #2563eb,
+        calc(-31 * var(--w)) 0 #2563eb,
+        calc(-41 * var(--w)) 0 #2563eb,
+        calc(-51 * var(--w)) 0 #2563eb,
+        calc(-61 * var(--w)) 0 #2563eb,
+        calc(-71 * var(--w)) 0 #2563eb,
+        calc(-81 * var(--w)) 0 #2563eb;
+    }
+    4% {
+      text-shadow:
+        calc(0 * var(--w)) 0 #2563eb,
+        calc(-1 * var(--w)) 0 #2563eb,
+        calc(-11 * var(--w)) 0 #2563eb,
+        calc(-21 * var(--w)) 0 #2563eb,
+        calc(-31 * var(--w)) 0 #2563eb,
+        calc(-41 * var(--w)) 0 #2563eb,
+        calc(-51 * var(--w)) 0 #2563eb,
+        calc(-61 * var(--w)) 0 #2563eb,
+        calc(-71 * var(--w)) 0 #2563eb,
+        calc(-81 * var(--w)) 0 #2563eb;
+    }
+    100% {
+      text-shadow:
+        calc(-9 * var(--w)) 0 #2563eb,
+        calc(-19 * var(--w)) 0 #2563eb,
+        calc(-29 * var(--w)) 0 #2563eb,
+        calc(-39 * var(--w)) 0 #2563eb,
+        calc(-49 * var(--w)) 0 #2563eb,
+        calc(-59 * var(--w)) 0 #2563eb,
+        calc(-69 * var(--w)) 0 #2563eb,
+        calc(-79 * var(--w)) 0 #2563eb,
+        calc(-89 * var(--w)) 0 #2563eb,
+        calc(-99 * var(--w)) 0 #2563eb;
+    }
+  }
+}
+
+
 .perspective {
   perspective: 1000px;
 }

@@ -4,30 +4,15 @@ import { useProfile } from '@/shared/lib/hooks/useProfile';
 import { useNavigate } from 'react-router';
 import { motion } from 'framer-motion';
 import { Calendar } from '@/shared/ui/calendar';
-import { useEffect, useState } from 'react';
+import PageLoader from '@/shared/ui/pageLoader/pageLoader';
 
 export const HomePage = () => {
   const navigate = useNavigate();
   const { data: decks, isLoading } = useDecks();
   const { data: profile } = useProfile();
-  const [fromDate, setFromDate] = useState<Date | null>(null);
-  const [toDate, setToDate] = useState<Date | null>(null);
-
-  useEffect(() => {
-    if (profile?.dailyDeckCompletions?.length) {
-      const firstCompletion = profile.dailyDeckCompletions[0];
-      const lastCompletion = profile.dailyDeckCompletions[profile.dailyDeckCompletions.length - 1];
-      setFromDate(new Date(firstCompletion.date));
-      setToDate(new Date(lastCompletion.date));
-    }
-  }, [profile]);
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-[40vh] text-gray-600">
-        Загрузка колод...
-      </div>
-    );
+    return <PageLoader />;
   }
 
   if (!decks || decks.length === 0) {
@@ -67,32 +52,30 @@ export const HomePage = () => {
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.4, delay: 0.1 }}
-          className="w-full h-full rounded-xl shadow bg-gray-100 flex items-start min-h-[365px] p-2 gap-4"
+          className="w-full h-full rounded-xl shadow bg-gray-100 flex items-start min-h-[350px] p-2 gap-4 flex-col lg:flex-row"
         >
-          <div className="w-full max-w-sm flex flex-col gap-4 bg-white rounded-lg shadow p-4 text-center">
+          <div className="w-full max-w-sm flex flex-col gap-4 bg-white rounded-lg shadow p-4 text-center mx-auto">
             <div className="flex flex-col justify-between items-center text-sm text-gray-600 text-start">
               <div>
                 🔥 Текущий стрик:{' '}
                 <span className="font-bold text-orange-600">{profile?.daysStreak} дней</span>
               </div>
               <div>
-                🏆 Самый большой стрик: <span className="font-bold text-green-600">12 дней</span>
+                🏆 Самый большой стрик:{' '}
+                <span className="font-bold text-green-600">{profile?.bestStreak} дней</span>
               </div>
             </div>
-            <p className="text-xs text-gray-500">
-              Продолжай в том же духе! Каждый день имеет значение — оставайся последовательным, и
-              результат не заставит себя ждать.
+            <p className="text-xs text-gray-500 flex flex-col gap-2">
+              <span className="font-semibold text-sm">Keep the streak alive! 🔥</span>
+              <span className="text-xs text-gray-400">Daily practice builds fluency</span>
             </p>
           </div>
 
           <Calendar
-            mode="range"
-            selected={{
-              from: fromDate || undefined,
-              to: toDate || undefined,
-            }}
+            mode="multiple"
+            selected={profile?.dailyDeckCompletions.map((completion) => new Date(completion.date))}
             disabled
-            className="rounded-md"
+            className="rounded-md mx-auto"
           />
         </motion.div>
 
