@@ -12,7 +12,7 @@ export interface Profile {
   dailyDeckCompletions: DailyDeckCompletion[];
 }
 
-interface DailyDeckCompletion {
+export interface DailyDeckCompletion {
   id: string;
   userId: string;
   date: string;

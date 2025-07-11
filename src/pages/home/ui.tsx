@@ -5,11 +5,19 @@ import { useNavigate } from 'react-router';
 import { motion } from 'framer-motion';
 import { Calendar } from '@/shared/ui/calendar';
 import PageLoader from '@/shared/ui/pageLoader/pageLoader';
+import { useEffect, useState } from 'react';
 
 export const HomePage = () => {
   const navigate = useNavigate();
   const { data: decks, isLoading } = useDecks();
   const { data: profile } = useProfile();
+  const [completions, setCompletions] = useState<Date[] | null>(null);
+
+  useEffect(() => {
+    if (profile) {
+      setCompletions(profile.dailyDeckCompletions.map((completion) => new Date(completion.date)));
+    }
+  }, [profile]);
 
   if (isLoading) {
     return <PageLoader />;
@@ -72,8 +80,9 @@ export const HomePage = () => {
           </div>
 
           <Calendar
+            key={completions?.length || 0}
             mode="multiple"
-            selected={profile?.dailyDeckCompletions.map((completion) => new Date(completion.date))}
+            selected={completions || []}
             disabled
             className="rounded-md mx-auto"
           />
